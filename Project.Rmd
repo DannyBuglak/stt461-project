@@ -1,6 +1,6 @@
 ---
 title: "Group Project"
-author: "Beau Belkowski"
+author: "Beau Belkowski, Brian Marquardt"
 date: '2024-02-27'
 output: html_document
 ---
