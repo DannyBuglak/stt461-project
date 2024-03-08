@@ -75,14 +75,21 @@ summary(fb)
 ```
 
 ```{r}
+fb1 <- fb %>%
+  filter(GS >= 5)
+fb1
+```
+
+
+```{r}
 library(tidyverse)
-rb <- fb %>%
+rb <- fb1 %>%
   filter(Pos == "RB")
-qb <- fb %>%
+qb <- fb1 %>%
   filter(Pos == "QB")
-wr <- fb %>%
+wr <- fb1 %>%
   filter(Pos == "WR")
-te <- fb %>%
+te <- fb1 %>%
   filter(Pos == "TE")
 rb
 qb
