@@ -1,7 +1,7 @@
 ---
-title: "project"
-author: "Danny Buglak"
-date: "2024-03-08"
+title: "Group Project"
+author: "Beau Belkowski"
+date: '2024-02-27'
 output: html_document
 ---
 
@@ -9,22 +9,85 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+getwd()
+#y2021 <- read.csv("2021.csv")
 ```
 
-## Including Plots
+```{r}
+setwd("/Users/beaubelkowski/Downloads/STT 461 GP/")
+y2021 <- read.csv("2021.csv")
+y2019 <- read.csv("2019.csv")
+y2018 <- read.csv("2018.csv")
+y2017 <- read.csv("2017.csv")
+y2016 <- read.csv("2016.csv")
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+y2021
+y2019
+y2018
+y2017
+y2016
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+y2021$G <- as.double(y2021$G)
+y2021$GS <- as.double(y2021$GS)
+y2021$Age <- as.double(y2021$Age)
+y2021
+```
+
+```{r}
+y2021$year<- rep('2021', times= nrow(y2021))
+y2021.1 <- y2021[,-1]
+y2021.1
+y2018$year<- rep('2018', times= nrow(y2018))
+y2018.1 <- y2018[,-1]
+y2018.1
+y2019$year<- rep('2019', times= nrow(y2019))
+y2019.1 <- y2019[,-1]
+y2019.1
+y2017$year<- rep('2017', times= nrow(y2017))
+y2017.1 <- y2017[,-1]
+y2017.1
+y2016$year<- rep('2016', times= nrow(y2016))
+y2016.1 <- y2016[,-1]
+y2016.1
+
+
+fb <- rbind(y2021.1, y2019.1, y2018.1, y2017.1, y2016.1)
+fb
+```
+```{r}
+fb$Tgt_gm <- fb$Tgt/fb$G
+fb$Rec_gm <- fb$Rec/fb$G
+fb$PassingYds_gm <- fb$PassingYds/fb$G
+fb$PassingTD_gm <- fb$PassingTD/fb$G
+fb$PassingAtt_gm <- fb$PassingAtt/fb$G
+fb$RushingYds_gm <- fb$RushingYds/fb$G
+fb$RushingTD_gm <- fb$RushingTD/fb$G
+fb$RushingAtt_gm <- fb$RushingAtt/fb$G
+fb$ReceivingYds_gm <- fb$ReceivingYds/fb$G
+fb$ReceivingTD_gm <- fb$ReceivingTD/fb$G
+fb$FantasyPoints_gm <- fb$FantasyPoints/fb$G
+fb$Int_gm <- fb$Int/fb$G
+fb$Fumbles_gm <- fb$Fumbles/fb$G
+fb$FumblesLost_gm <- fb$FumblesLost/fb$G
+summary(fb)
+```
+
+```{r}
+library(tidyverse)
+rb <- fb %>%
+  filter(Pos == "RB")
+qb <- fb %>%
+  filter(Pos == "QB")
+wr <- fb %>%
+  filter(Pos == "WR")
+te <- fb %>%
+  filter(Pos == "TE")
+rb
+qb
+wr
+te
+```
+
