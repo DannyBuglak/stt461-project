@@ -15,7 +15,6 @@ getwd()
 ```
 
 ```{r}
-setwd("/Users/beaubelkowski/Downloads/STT 461 GP/")
 y2021 <- read.csv("2021.csv")
 y2019 <- read.csv("2019.csv")
 y2018 <- read.csv("2018.csv")
