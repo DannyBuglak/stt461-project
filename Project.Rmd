@@ -76,7 +76,7 @@ summary(fb)
 
 ```{r}
 fb1 <- fb %>%
-  filter(GS >= 5)
+  filter(GS >= 5, FantasyPoints_gm > 0)
 fb1
 ```
 
@@ -95,5 +95,33 @@ rb
 qb
 wr
 te
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(data = fb1, aes(x = FantasyPoints_gm)) + 
+  geom_histogram() +
+  ggtitle("Distribution of Fantasy Points per Game")
+
+ggplot(data = rb, aes(x = RushingYds_gm)) + 
+  geom_histogram() +
+  ggtitle("Distribution of Runningbacks Rushing Yards per Game")
+
+ggplot(data = qb, aes(x = PassingTD_gm)) + 
+  geom_histogram() +
+  ggtitle("Distribution of Quarterbacks Passing Touchdowns per Game")
+
+ggplot(data = rb, aes(x = FantasyPoints_gm, y = RushingYds_gm)) + 
+  geom_point() +
+  ggtitle("Correlation for Running Backs Fantasy Points per Game and Rushing Yards per Game")
+
+ggplot(data = fb1, aes(x = FantasyPoints_gm, y = FumblesLost_gm)) + 
+  geom_point() +
+  ggtitle("Correlation Between Fantasy Points per Game and Fumbles Lost per Game")
+
+ggplot(data = wr, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) + 
+  geom_point() +
+  ggtitle("Correlation for Wide Recievers Fantasy Points per Game and Recieving Touchdowns per Game")
 ```
 
