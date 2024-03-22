@@ -1,12 +1,15 @@
 ---
 title: "Group Project"
-author: "Beau Belkowski, Brian Marquardt"
+author: "Beau Belkowski, Brian Marquardt, Danny Buglak"
 date: '2024-02-27'
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(cluster)
+library(ggplot2)
 ```
 
 ```{r}
@@ -32,29 +35,29 @@ y2016
 y2021$G <- as.double(y2021$G)
 y2021$GS <- as.double(y2021$GS)
 y2021$Age <- as.double(y2021$Age)
-y2021
+#y2021
 ```
 
 ```{r}
 y2021$year<- rep('2021', times= nrow(y2021))
 y2021.1 <- y2021[,-1]
-y2021.1
+#y2021.1
 y2018$year<- rep('2018', times= nrow(y2018))
 y2018.1 <- y2018[,-1]
-y2018.1
+#y2018.1
 y2019$year<- rep('2019', times= nrow(y2019))
 y2019.1 <- y2019[,-1]
-y2019.1
+#y2019.1
 y2017$year<- rep('2017', times= nrow(y2017))
 y2017.1 <- y2017[,-1]
-y2017.1
+#y2017.1
 y2016$year<- rep('2016', times= nrow(y2016))
 y2016.1 <- y2016[,-1]
-y2016.1
+#y2016.1
 
 
 fb <- rbind(y2021.1, y2019.1, y2018.1, y2017.1, y2016.1)
-fb
+#fb
 ```
 ```{r}
 fb$Tgt_gm <- fb$Tgt/fb$G
@@ -82,7 +85,6 @@ fb1
 
 
 ```{r}
-library(tidyverse)
 rb <- fb1 %>%
   filter(Pos == "RB")
 qb <- fb1 %>%
@@ -98,7 +100,6 @@ te
 ```
 
 ```{r}
-library(ggplot2)
 
 ggplot(data = fb1, aes(x = FantasyPoints_gm)) + 
   geom_histogram() +
@@ -124,4 +125,64 @@ ggplot(data = wr, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) +
   geom_point() +
   ggtitle("Correlation for Wide Recievers Fantasy Points per Game and Recieving Touchdowns per Game")
 ```
+
+
+
+
+
+
+
+
+
+## Clustering Analysis
+
+```{r}
+set.seed(20)
+
+# Remove name and team and omit any NA values
+clust_fb <- fb1 %>% 
+  select(-c("Player", "Tm")) %>%
+  na.omit()
+
+# Scale the data to normalize it
+normalized_fb <- scale(clust_fb[, sapply(clust_fb, is.numeric)])
+
+# Determine the optimal number of clusters using Elbow method
+elbow <- sapply(1:15, function(k) {
+  kmeans(normalized_fb, centers = k, nstart = 50)$tot.withinss
+  })
+plot(1:15, elbow, type="b", xlab="Number of Clusters", ylab="Within groups sum of squares")
+```
+
+Elbow Method shows that 4 is the optimal number of clusters. This is because 4 is when the line on the graph "elbows", or where it begins to shallow out and any more clusters than 4 do not change the analysis by much.
+
+```{r}
+# Number of clusters found from the previous Elbow plot
+k <- 4
+
+# Perform kmeans on normalized dataset
+kmeans_analysis <- kmeans(normalized_fb, centers = k, nstart = 50)
+
+# Add clusters to dataset
+clust_fb$cluster <- as.factor(kmeans_analysis$cluster)
+clust_fb
+
+#library(dplyr)
+#library(ggplot2)
+
+# Example: Summary statistics by Pos and cluster
+#clust_fb %>%
+#  group_by(Pos, cluster) %>%
+#  summarise(mean_fantasy_points = mean(FantasyPoints_gm, na.rm = TRUE),
+#            n = n())
+
+# Example: Plotting
+#ggplot(clust_fb, aes(x = FantasyPoints_gm, fill = cluster)) +
+#  geom_histogram(bins = 30, alpha = 0.6) +
+#  facet_wrap(~Pos) +
+#  labs(title = "Fantasy Points per Game Distribution by Position and Cluster",
+#       x = "Fantasy Points per Game",
+#       y = "Count")
+```
+
 
