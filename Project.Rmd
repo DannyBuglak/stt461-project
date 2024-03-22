@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(cluster)
 library(ggplot2)
+library(factoextra)
+library(corrplot)
 ```
 
 ```{r}
@@ -147,7 +149,6 @@ te_gm <- te %>%
 
 
 ```{r}
-library(corrplot)
 
 qbcorr <- subset(qb_gm, select = -c(Tm, Pos, Player, year))
 corrplot(cor(qbcorr), method ="circle")
@@ -322,32 +323,48 @@ plot(1:15, elbow, type="b", xlab="Number of Clusters", ylab="Within groups sum o
 Elbow Method shows that 4 is the optimal number of clusters. This is because 4 is when the line on the graph "elbows", or where it begins to shallow out and any more clusters than 4 do not change the analysis by much.
 
 ```{r}
-# Number of clusters found from the previous Elbow plot
-k <- 4
 
-# Perform kmeans on normalized dataset
-kmeans_analysis <- kmeans(normalized_fb, centers = k, nstart = 50)
+# Performs k means on normalized data set
+k <- kmeans(normalized_fb, centers = 4)
 
-# Add clusters to dataset
-clust_fb$cluster <- as.factor(kmeans_analysis$cluster)
-clust_fb
+# Add cluster information to original data set
+clust_fb$cluster <- k$cluster
 
-#library(dplyr)
-#library(ggplot2)
+# For factor or character variables, use table to get counts for each cluster
+position_counts <- table(clust_fb$cluster, clust_fb$Pos)
 
-# Example: Summary statistics by Pos and cluster
-#clust_fb %>%
-#  group_by(Pos, cluster) %>%
-#  summarise(mean_fantasy_points = mean(FantasyPoints_gm, na.rm = TRUE),
-#            n = n())
+get_mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
 
-# Example: Plotting
-#ggplot(clust_fb, aes(x = FantasyPoints_gm, fill = cluster)) +
-#  geom_histogram(bins = 30, alpha = 0.6) +
-#  facet_wrap(~Pos) +
-#  labs(title = "Fantasy Points per Game Distribution by Position and Cluster",
-#       x = "Fantasy Points per Game",
-#       y = "Count")
+# Apply the custom mode function to get the most common position per cluster
+common_positions <- tapply(clust_fb$Pos, clust_fb$cluster, get_mode)
+common_positions
+
+# First, create a data frame with only numeric columns and cluster assignment
+numeric_columns <- clust_fb %>% select(cluster, where(is.numeric))
+
+# Aggregate the results to view the cluster summary
+cluster_summary <- aggregate(. ~ cluster, data=numeric_columns, mean)
+cluster_summary
+
+# Visualize the clustering
+fviz_cluster(list(data = normalized_fb, cluster = k$cluster))
+
+
+# NOT SURE IF THESE ARE RIGHT YET
+ggplot(clust_fb, aes(x=factor(cluster), y=ReceivingYds_gm, fill=factor(cluster))) + 
+  geom_boxplot() + 
+  labs(x="Cluster", y="Receiving Yards per Game")
+
+ggplot(clust_fb, aes(x=factor(cluster), y=PassingTD_gm, fill=factor(cluster))) + 
+  geom_boxplot() + 
+  labs(x="Cluster", y="Passing Touchdowns per Game")
+
+ggplot(clust_fb, aes(x=factor(cluster), y=PassingYds_gm, fill=factor(cluster))) + 
+  geom_boxplot() + 
+  labs(x="Cluster", y="Passing Yards per Game")
 ```
 
 
