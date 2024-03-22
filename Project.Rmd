@@ -125,6 +125,171 @@ ggplot(data = wr, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) +
   geom_point() +
   ggtitle("Correlation for Wide Recievers Fantasy Points per Game and Recieving Touchdowns per Game")
 ```
+```{r}
+rb1 <- rb %>%
+  filter(RushingYds_gm == 0)
+rb1
+```
+
+```{r}
+qb_gm <- qb %>%
+  select(Player, Tm, Pos, Age, G, GS, , year, Tgt_gm, Rec_gm, PassingYds_gm, PassingTD_gm, PassingAtt_gm, RushingYds_gm, RushingTD_gm, RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, FantasyPoints_gm, Int_gm, Fumbles_gm, FumblesLost_gm)
+
+rb_gm <- rb %>%
+  select(Player, Tm, Pos, Age, G, GS, , year, Tgt_gm, Rec_gm, PassingYds_gm, PassingTD_gm, PassingAtt_gm, RushingYds_gm, RushingTD_gm, RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, FantasyPoints_gm, Int_gm, Fumbles_gm, FumblesLost_gm)
+
+wr_gm <- wr %>%
+  select(Player, Tm, Pos, Age, G, GS, , year, Tgt_gm, Rec_gm, PassingYds_gm, PassingTD_gm, PassingAtt_gm, RushingYds_gm, RushingTD_gm, RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, FantasyPoints_gm, Int_gm, Fumbles_gm, FumblesLost_gm)
+
+te_gm <- te %>%
+  select(Player, Tm, Pos, Age, G, GS, , year, Tgt_gm, Rec_gm, PassingYds_gm, PassingTD_gm, PassingAtt_gm, RushingYds_gm, RushingTD_gm, RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, FantasyPoints_gm, Int_gm, Fumbles_gm, FumblesLost_gm)
+```
+
+
+```{r}
+library(corrplot)
+
+qbcorr <- subset(qb_gm, select = -c(Tm, Pos, Player, year))
+corrplot(cor(qbcorr), method ="circle")
+
+rbcorr <- subset(rb_gm, select = -c(Tm, Pos, Player, year))
+corrplot(cor(rbcorr), method ="circle")
+
+wrcorr <- subset(wr_gm, select = -c(Tm, Pos, Player, year))
+corrplot(cor(wrcorr), method ="circle")
+
+tecorr <- subset(te_gm, select = -c(Tm, Pos, Player, year))
+corrplot(cor(tecorr), method ="circle")
+```
+```{r}
+# Most highly correlated stats with qb success
+cor(qb_gm$FantasyPoints_gm, qb_gm$PassingTD_gm)
+cor(qb_gm$FantasyPoints_gm, qb_gm$PassingYds_gm)
+cor(qb_gm$FantasyPoints_gm, qb_gm$GS)
+cor(qb_gm$FantasyPoints_gm, qb_gm$PassingAtt_gm)
+```
+
+```{r}
+ggplot(qb_gm, aes(x = FantasyPoints_gm, y = PassingTD_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(qb_gm, aes(x = FantasyPoints_gm, y = PassingYds_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(qb_gm, aes(x = FantasyPoints_gm, y = GS)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(qb_gm, aes(x = FantasyPoints_gm, y = PassingAtt_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+```
+
+
+```{r}
+# Most highly correlated stats with rb success
+cor(rb_gm$FantasyPoints_gm, rb_gm$Tgt_gm)
+cor(rb_gm$FantasyPoints_gm, rb_gm$Rec_gm)
+cor(rb_gm$FantasyPoints_gm, rb_gm$RushingYds_gm)
+cor(rb_gm$FantasyPoints_gm, rb_gm$RushingTD_gm)
+cor(rb_gm$FantasyPoints_gm, rb_gm$RushingAtt_gm)
+cor(rb_gm$FantasyPoints_gm, rb_gm$ReceivingYds_gm)
+cor(rb_gm$FantasyPoints_gm, rb_gm$ReceivingTD_gm)
+cor(rb_gm$FantasyPoints_gm, rb_gm$GS)
+```
+
+```{r}
+ggplot(rb_gm, aes(x = FantasyPoints_gm, y = Tgt_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(rb_gm, aes(x = FantasyPoints_gm, y = Rec_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(rb_gm, aes(x = FantasyPoints_gm, y = RushingYds_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(rb_gm, aes(x = FantasyPoints_gm, y = RushingTD_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(rb_gm, aes(x = FantasyPoints_gm, y = RushingAtt_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(rb_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(rb_gm, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(rb_gm, aes(x = FantasyPoints_gm, y = GS)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+```
+
+```{r}
+# Most highly correlated stats with wr success
+cor(wr_gm$FantasyPoints_gm, wr_gm$GS)
+cor(wr_gm$FantasyPoints_gm, wr_gm$Tgt_gm)
+cor(wr_gm$FantasyPoints_gm, wr_gm$Rec_gm)
+cor(wr_gm$FantasyPoints_gm, wr_gm$ReceivingTD_gm)
+cor(wr_gm$FantasyPoints_gm, wr_gm$ReceivingYds_gm)
+```
+
+```{r}
+ggplot(wr_gm, aes(x = FantasyPoints_gm, y = GS)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(wr_gm, aes(x = FantasyPoints_gm, y = Tgt_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(wr_gm, aes(x = FantasyPoints_gm, y = Rec_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(wr_gm, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(wr_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+```
+
+```{r}
+# Most highly correlated stats with te success
+cor(te_gm$FantasyPoints_gm, te_gm$Tgt_gm)
+cor(te_gm$FantasyPoints_gm, te_gm$Rec_gm)
+cor(te_gm$FantasyPoints_gm, te_gm$ReceivingTD_gm)
+cor(te_gm$FantasyPoints_gm, te_gm$ReceivingYds_gm)
+```
+
+```{r}
+ggplot(te_gm, aes(x = FantasyPoints_gm, y = Tgt_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(te_gm, aes(x = FantasyPoints_gm, y = Rec_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(te_gm, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+
+ggplot(te_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) + 
+  geom_point()+ 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+```
 
 
 
