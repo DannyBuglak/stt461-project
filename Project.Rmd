@@ -320,7 +320,7 @@ elbow <- sapply(1:15, function(k) {
 plot(1:15, elbow, type="b", xlab="Number of Clusters", ylab="Within groups sum of squares")
 ```
 
-Elbow Method shows that 4 is the optimal number of clusters. This is because 4 is when the line on the graph "elbows", or where it begins to shallow out and any more clusters than 4 do not change the analysis by much.
+Elbow Method shows that 4 is the optimal number of clusters. This is because 4 is when the line on the graph "elbows", or where it begins to shallow out and adding any more clusters than 4 do not change the analysis by much.
 
 ```{r}
 
@@ -351,6 +351,10 @@ cluster_summary
 
 # Visualize the clustering
 fviz_cluster(list(data = normalized_fb, cluster = k$cluster))
+
+#library(caret)
+#clust_fb$cluster <- as.factor(clust_fb$cluster)
+#confusionMatrix(clust_fb$cluster, clust_fb$Pos)
 
 
 # NOT SURE IF THESE ARE RIGHT YET
