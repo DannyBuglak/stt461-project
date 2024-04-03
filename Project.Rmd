@@ -343,38 +343,38 @@ get_mode <- function(x) {
 common_positions <- tapply(clust_fb$Pos, clust_fb$cluster, get_mode)
 common_positions
 
+
+
+```
+
+After performing kmeans on the normalized data set, we can see how the clusters were created. The clusters correspond as follows:
+
+1: QB (Quarter Back)
+
+2: TE (Tight End)
+
+3: RB (Running Back)
+
+4: WR (Wide Receiver)
+
+
+```{r}
 # First, create a data frame with only numeric columns and cluster assignment
 numeric_columns <- clust_fb %>% select(cluster, where(is.numeric))
 
 # Aggregate the results to view the cluster summary
 cluster_summary <- aggregate(. ~ cluster, data=numeric_columns, mean)
 cluster_summary
-
 ```
 
-
-
-```{r cluster-visualization}
-# Visualize the clustering
-fviz_cluster(list(data = normalized_fb, cluster = k$cluster))
-```
-
-
-
-```{r confusion-matrix}
-#library(caret)
-#clust_fb$cluster <- as.factor(clust_fb$cluster)
-#confusionMatrix(clust_fb$cluster, clust_fb$Pos)
-```
-
-
+Then, we can aggregate the data to show the averages for each position. For example, the average age for a tight end in 26.4 with an average 8.26 games started. There are some dissimilar properties for each cluster, for example the QB average passing touchdowns are much higher than the other three positions, but this is as expected due to the position.
 
 ```{r tables}
 # Format a table relating Games Started and cluster
 gs_table <- table(clust_fb$cluster, clust_fb$GS)
 gs_prop <- prop.table(gs_table, margin=1) * 100
 gs_prop_formatted <- apply(gs_prop, c(1, 2), function(x) paste0(round(x, 1), "%"))
-gs_prop_formatted
+data.frame(gs_prop_formatted)
 
 
 #fp_table <- table(clust_fb$cluster, clust_fb$FantasyPoints)
@@ -387,6 +387,211 @@ gs_prop_formatted
 #fpG_prop_formatted <- apply(fpG_prop, c(1, 2), function(x) paste0(round(x, 1), "%"))
 #fpG_prop_formatted
 ```
+
+Next, we can format tables to show different statistics that are common in each cluster. The gs_table data frame shows that, on average, most quarter backs start 16 games. Most tight ends start 5 games, on average. Most running backs start 16 games on average. Finally, wide receivers start 16 games on average. These are calculate from finding the proportion of games started for each position and put into a data frame. Then, the highest value in each row is the largest proportion of games started for the respective position.
+
+```{r cluster-visualization}
+
+# Cluster visualization with Games Started vs FantasyPoints
+
+# Extract just the FantasyPoints and GS columns for k-means
+fb_subset <- clust_fb[, c("FantasyPoints", "GS")]
+
+summary(fb_subset)
+
+# Perform k-means
+set.seed(20)
+k_fb_subset <- kmeans(fb_subset, centers = 4)  
+k_fb_subset$centers
+
+# Create a data frame with the results
+fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
+
+# fviz_cluster to visualize normalized data
+fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
+             palette = "jco", 
+             ggtheme = theme_minimal()) +
+  labs(x = "Fantasy Points", y = "Games Started")
+
+# GGplot to visualize
+ggplot(fb_clustered, aes(x = FantasyPoints, y = GS, color = cluster)) +
+  geom_point() +
+  scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
+  labs(x = "Fantasy Points", y = "Games Started", color = "Cluster") +
+  theme_minimal()
+
+```
+
+Using GGplot and Factoextra to visualize the kmeans for Fantasy Points vs. Games started, you can see that the more games started correlates to more fantasy points. There are a few outliers, for example, one point is at approximately 8 games started with 300+ fantasy points. But the grey dots and circle have the majority of the high fantasy points in the league.
+
+```{r cluster-visualization2}
+
+# Cluster visualization with Targets vs FantasyPoints
+
+# Extract just the FantasyPoints and GS columns for k-means
+fb_subset <- clust_fb[, c("FantasyPoints", "Tgt")]
+
+summary(fb_subset)
+
+# Perform k-means
+set.seed(20)
+k_fb_subset <- kmeans(fb_subset, centers = 4)  
+k_fb_subset$centers
+
+# Create a data frame with the results
+fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
+
+# fviz_cluster to visualize normalized data
+fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
+             palette = "jco", 
+             ggtheme = theme_minimal()) +
+  labs(x = "Fantasy Points", y = "Targets")
+
+# GGplot to visualize
+ggplot(fb_clustered, aes(x = FantasyPoints, y = Tgt, color = cluster)) +
+  geom_point() +
+  scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
+  labs(x = "Fantasy Points", y = "Targets", color = "Cluster") +
+  theme_minimal()
+
+```
+
+
+The bottom two show that fumbles and fumbles lost do not have a big correlation with the amount of fantasy points
+
+```{r cluster-visualization3}
+
+# Cluster visualization with Fumbles vs FantasyPoints
+
+# Extract just the FantasyPoints and GS columns for k-means
+fb_subset <- clust_fb[, c("FantasyPoints", "Fumbles")]
+
+summary(fb_subset)
+
+# Perform k-means
+set.seed(20)
+k_fb_subset <- kmeans(fb_subset, centers = 4)  
+k_fb_subset$centers
+
+# Create a data frame with the results
+fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
+
+# fviz_cluster to visualize normalized data
+fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
+             palette = "jco", 
+             ggtheme = theme_minimal()) +
+  labs(x = "Fantasy Points", y = "Fumbles")
+
+# GGplot to visualize
+ggplot(fb_clustered, aes(x = FantasyPoints, y = Fumbles, color = cluster)) +
+  geom_point() +
+  scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
+  labs(x = "Fantasy Points", y = "Fumbles", color = "Cluster") +
+  theme_minimal()
+
+```
+
+The above plots and output show that the amount of fumbles does not necessarily affect how many fantasy points each position received.
+
+
+```{r cluster-visualization4}
+
+# Cluster visualization with Fumbles Lost vs FantasyPoints
+
+# Extract just the FantasyPoints and GS columns for k-means
+fb_subset <- clust_fb[, c("FantasyPoints", "FumblesLost")]
+
+summary(fb_subset)
+
+# Perform k-means
+set.seed(20)
+k_fb_subset <- kmeans(fb_subset, centers = 4)  
+k_fb_subset$centers
+
+# Create a data frame with the results
+fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
+
+# fviz_cluster to visualize normalized data
+fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
+             palette = "jco", 
+             ggtheme = theme_minimal()) +
+  labs(x = "Fantasy Points", y = "FumblesLost")
+
+# GGplot to visualize
+ggplot(fb_clustered, aes(x = FantasyPoints, y = FumblesLost, color = cluster)) +
+  geom_point() +
+  scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
+  labs(x = "Fantasy Points", y = "FumblesLost", color = "Cluster") +
+  theme_minimal()
+
+```
+
+```{r cluster-visualization5}
+
+# Cluster visualization with Fumbles Lost vs FantasyPoints
+
+# Extract just the FantasyPoints and GS columns for k-means
+fb_subset <- clust_fb[, c("FantasyPoints_gm", "FumblesLost_gm")]
+
+summary(fb_subset)
+
+# Perform k-means
+set.seed(20)
+k_fb_subset <- kmeans(fb_subset, centers = 4)  
+k_fb_subset$centers
+
+# Create a data frame with the results
+fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
+
+# fviz_cluster to visualize normalized data
+fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
+             palette = "jco", 
+             ggtheme = theme_minimal()) +
+  labs(x = "Fantasy Points", y = "FumblesLost_gm")
+
+# GGplot to visualize
+ggplot(fb_clustered, aes(x = FantasyPoints_gm, y = FumblesLost_gm, color = cluster)) +
+  geom_point() +
+  scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
+  labs(x = "Fantasy Points", y = "FumblesLost_gm", color = "Cluster") +
+  theme_minimal()
+
+```
+
+```{r cluster-visualization6}
+
+# Cluster visualization with Fumbles Lost vs FantasyPoints
+
+# Extract just the FantasyPoints and GS columns for k-means
+fb_subset <- clust_fb[, c("FantasyPoints_gm", "Fumbles_gm")]
+
+summary(fb_subset)
+
+# Perform k-means
+set.seed(20)
+k_fb_subset <- kmeans(fb_subset, centers = 4)  
+k_fb_subset$centers
+
+# Create a data frame with the results
+fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
+
+# fviz_cluster to visualize normalized data
+fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
+             palette = "jco", 
+             ggtheme = theme_minimal()) +
+  labs(x = "Fantasy Points", y = "Fumbles_gm")
+
+# GGplot to visualize
+ggplot(fb_clustered, aes(x = FantasyPoints_gm, y = Fumbles_gm, color = cluster)) +
+  geom_point() +
+  scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
+  labs(x = "Fantasy Points", y = "Fumbles_gm", color = "Cluster") +
+  theme_minimal()
+
+```
+
+These two show the Fantasy points per game and fumbles lost and fumbles per game (respectively). This also shows that the amount of fumbles does not necessarily mean a lower fantasy points per game.
+
 
 
 
@@ -417,6 +622,16 @@ ggplot(clust_fb, aes(x=factor(cluster), y=FantasyPoints_gm, fill=factor(cluster)
 ggplot(clust_fb, aes(x=factor(cluster), y=FantasyPoints, fill=factor(cluster))) + 
   geom_boxplot() + 
   labs(x="Cluster", y="Fantasy Points")
+
+# FUMBLES PER GAME
+ggplot(clust_fb, aes(x=factor(cluster), y=Fumbles_gm, fill=factor(cluster))) + 
+  geom_boxplot() + 
+  labs(x="Cluster", y="Fumbles per Game")
+
+# FUMBLES LOST PER GAME
+ggplot(clust_fb, aes(x=factor(cluster), y=FumblesLost_gm, fill=factor(cluster))) + 
+  geom_boxplot() + 
+  labs(x="Cluster", y="Fumbles Lost per Game")
 ```
 
 
