@@ -264,69 +264,153 @@ ggplot(te_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) +
 
 ```{r}
 #QB Linear Models
-PassingTD_gm_model <- lm(PassingTD_gm ~ FantasyPoints_gm, data = qb_gm)
-PassingYds_gm_model <- lm(PassingYds_gm ~ FantasyPoints_gm, data = qb_gm)
-GS_model <- lm(GS ~ FantasyPoints_gm, data = qb_gm)
-PassingAtt_gm_model <- lm(PassingAtt_gm ~ FantasyPoints_gm, data = qb_gm)
+PassingTD_gm_model <- lm(FantasyPoints_gm ~ PassingTD_gm, data = qb_gm)
+PassingYds_gm_model <- lm(FantasyPoints_gm ~ PassingYds_gm, data = qb_gm)
+GS_model <- lm(FantasyPoints_gm ~ GS, data = qb_gm)
+PassingAtt_gm_model <- lm(FantasyPoints_gm ~ PassingAtt_gm, data = qb_gm)
 
-PassingTD_gm_model
-PassingYds_gm_model
-GS_model
-PassingAtt_gm_model
+# Adjusted R squared values
+PassingTD_summary <- summary(PassingTD_gm_model)
+adjusted_r_squared <- PassingTD_summary$adj.r.squared
+adjusted_r_squared
+
+PassingYds_summary <- summary(PassingYds_gm_model)
+adjusted_r_squared <- PassingYds_summary$adj.r.squared
+adjusted_r_squared
+
+PassingAtt_summary <- summary(PassingAtt_gm_model)
+adjusted_r_squared <- PassingAtt_summary$adj.r.squared
+adjusted_r_squared
+
+GS_summary <- summary(GS_model)
+adjusted_r_squared <- GS_summary$adj.r.squared
+adjusted_r_squared
+
+
+# Combined QB model
+all_qb_model <- lm(FantasyPoints_gm ~ PassingTD_gm + PassingYds_gm + PassingAtt_gm + GS, data = qb_gm)
+summary(all_model)
+
 
 ```
+
+
 
 ```{r}
 #RB Linear Models
-Tgt_gm_model <- lm(Tgt_gm ~ FantasyPoints_gm, data = rb_gm)
-Rec_gm_model <- lm(Rec_gm ~ FantasyPoints_gm, data = rb_gm)
-RushingYds_gm_model <- lm(RushingYds_gm ~ FantasyPoints_gm, data = rb_gm)
-RushingTD_gm_model <- lm(RushingTD_gm ~ FantasyPoints_gm, data = rb_gm)
-RushingAtt_gm_model <- lm(RushingAtt_gm ~ FantasyPoints_gm, data = rb_gm)
-ReceivingYds_gm_model <- lm(ReceivingYds_gm ~ FantasyPoints_gm, data = rb_gm)
-ReceivingTD_gm_model <- lm(ReceivingTD_gm ~ FantasyPoints_gm, data = rb_gm)
-GS_model <- lm(GS ~ FantasyPoints_gm, data = rb_gm)
+Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = rb_gm)
+Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = rb_gm)
+RushingYds_gm_model <- lm(FantasyPoints_gm ~ RushingYds_gm, data = rb_gm)
+RushingTD_gm_model <- lm(FantasyPoints_gm ~ RushingTD_gm, data = rb_gm)
+RushingAtt_gm_model <- lm(FantasyPoints_gm ~ RushingAtt_gm, data = rb_gm)
+ReceivingYds_gm_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm, data = rb_gm)
+ReceivingTD_gm_model <- lm(FantasyPoints_gm ~ ReceivingTD_gm, data = rb_gm)
+GS_model <- lm(FantasyPoints_gm ~ GS, data = rb_gm)
 
-Tgt_gm_model
-Rec_gm_model
-RushingYds_gm_model
-RushingTD_gm_model
-RushingAtt_gm_model
-ReceivingYds_gm_model
-ReceivingTD_gm_model
-GS_model
+
+# Adjusted R squared values
+RushingYds_gm_summary <- summary(RushingYds_gm_model)
+adjusted_r_squared <- RushingYds_gm_summary$adj.r.squared
+adjusted_r_squared
+
+RushingAtt_gm_summary <- summary(RushingAtt_gm_model)
+adjusted_r_squared <- RushingAtt_gm_summary$adj.r.squared
+adjusted_r_squared
+
+Rec_gm_summary <- summary(Rec_gm_model)
+adjusted_r_squared <- Rec_gm_summary$adj.r.squared
+adjusted_r_squared
+
+Tgt_gm_summary <- summary(Tgt_gm_model)
+adjusted_r_squared <- Tgt_gm_summary$adj.r.squared
+adjusted_r_squared
+
+ReceivingYds_gm_summary <- summary(ReceivingYds_gm_model)
+adjusted_r_squared <- ReceivingYds_gm_summary$adj.r.squared
+adjusted_r_squared
+
+RushingTD_gm_summary <- summary(RushingTD_gm_model)
+adjusted_r_squared <- RushingTD_gm_summary$adj.r.squared
+adjusted_r_squared
+
+GS_summary <- summary(GS_model)
+adjusted_r_squared <- GS_summary$adj.r.squared
+adjusted_r_squared
+
+ReceivingTD_gm_summary <- summary(ReceivingTD_gm_model)
+adjusted_r_squared <- ReceivingTD_gm_summary$adj.r.squared
+adjusted_r_squared
+
+# Combined RB model
+all_rb_model <- lm(FantasyPoints_gm ~ Tgt_gm + Rec_gm + RushingYds_gm + RushingTD_gm + RushingAtt_gm + ReceivingYds_gm + ReceivingTD_gm + GS, data = rb_gm)
+summary(all_rb_model)
+
+```
+
+
+```{r}
+#WR Linear Models
+GS_model <- lm(FantasyPoints_gm ~ GS, data = wr_gm)
+Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = wr_gm)
+Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = wr_gm)
+ReceivingTD_gm_model <- lm(FantasyPoints_gm ~ ReceivingTD_gm, data = wr_gm)
+ReceivingYds_gm_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm, data = wr_gm)
+
+# Adjusted R squared values
+ReceivingYds_gm_summary <- summary(ReceivingYds_gm_model)
+adjusted_r_squared <- ReceivingYds_gm_summary$adj.r.squared
+adjusted_r_squared
+
+Rec_gm_summary <- summary(Rec_gm_model)
+adjusted_r_squared <- Rec_gm_summary$adj.r.squared
+adjusted_r_squared
+
+Tgt_gm_summary <- summary(Tgt_gm_model)
+adjusted_r_squared <- Tgt_gm_summary$adj.r.squared
+adjusted_r_squared
+
+ReceivingTD_gm_summary <- summary(ReceivingTD_gm_model)
+adjusted_r_squared <- ReceivingTD_gm_summary$adj.r.squared
+adjusted_r_squared
+
+GS_summary <- summary(GS_model)
+adjusted_r_squared <- GS_summary$adj.r.squared
+adjusted_r_squared
+
+# Combined WR model
+all_wr_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm + Rec_gm + Tgt_gm + ReceivingTD_gm + GS, data = wr_gm)
+summary(all_wr_model)
 
 ```
 
 ```{r}
-#WR Linear Models
-GS_model <- lm(GS ~ FantasyPoints_gm, data = wr_gm)
-Tgt_gm_model <- lm(Tgt_gm ~ FantasyPoints_gm, data = wr_gm)
-Rec_gm_model <- lm(Rec_gm ~ FantasyPoints_gm, data = wr_gm)
-ReceivingTD_gm_model <- lm(ReceivingTD_gm ~ FantasyPoints_gm, data = wr_gm)
-ReceivingYds_gm_model <- lm(ReceivingYds_gm ~ FantasyPoints_gm, data = wr_gm)
+#TE Linear Models
+Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = te_gm)
+Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = te_gm)
+ReceivingTD_gm_model <- lm(FantasyPoints_gm ~ ReceivingTD_gm, data = te_gm)
+ReceivingYds_gm_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm, data = te_gm)
 
-GS_model
-Tgt_gm_model
-Rec_gm_model
-ReceivingTD_gm_model
-ReceivingYds_gm_model
+# Adjusted R squared values
+ReceivingYds_gm_summary <- summary(ReceivingYds_gm_model)
+adjusted_r_squared <- ReceivingYds_gm_summary$adj.r.squared
+adjusted_r_squared
 
+Rec_gm_summary <- summary(Rec_gm_model)
+adjusted_r_squared <- Rec_gm_summary$adj.r.squared
+adjusted_r_squared
+
+Tgt_gm_summary <- summary(Tgt_gm_model)
+adjusted_r_squared <- Tgt_gm_summary$adj.r.squared
+adjusted_r_squared
+
+ReceivingTD_gm_summary <- summary(ReceivingTD_gm_model)
+adjusted_r_squared <- ReceivingTD_gm_summary$adj.r.squared
+adjusted_r_squared
+
+# Combined TE model
+all_te_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm + Rec_gm + Tgt_gm + ReceivingTD_gm, data = te_gm)
+summary(all_te_model)
 ```
-
-```{r}
-#WR Linear Models
-Tgt_gm_model <- lm(Tgt_gm ~ FantasyPoints_gm, data = te_gm)
-Rec_gm_model <- lm(Rec_gm ~ FantasyPoints_gm, data = te_gm)
-ReceivingTD_gm_model <- lm(ReceivingTD_gm ~ FantasyPoints_gm, data = te_gm)
-ReceivingYds_gm_model <- lm(ReceivingYds_gm ~ FantasyPoints_gm, data = te_gm)
-
-Tgt_gm_model
-Rec_gm_model
-ReceivingTD_gm_model
-ReceivingYds_gm_model
-```
-
 
 
 >>>>>>> Stashed changes
