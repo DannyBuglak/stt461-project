@@ -411,7 +411,7 @@ fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
 fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
              palette = "jco", 
              ggtheme = theme_minimal()) +
-  labs(x = "Fantasy Points", y = "Games Started")
+             labs(x = "Fantasy Points", y = "Games Started")
 
 # GGplot to visualize
 ggplot(fb_clustered, aes(x = FantasyPoints, y = GS, color = cluster)) +
@@ -429,7 +429,7 @@ Using GGplot and Factoextra to visualize the kmeans for Fantasy Points vs. Games
 # Cluster visualization with Targets vs FantasyPoints
 
 # Extract just the FantasyPoints and GS columns for k-means
-fb_subset <- clust_fb[, c("FantasyPoints", "Tgt")]
+fb_subset <- clust_fb[, c("FantasyPoints_gm", "Tgt_gm")]
 
 summary(fb_subset)
 
@@ -445,13 +445,13 @@ fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
 fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
              palette = "jco", 
              ggtheme = theme_minimal()) +
-  labs(x = "Fantasy Points", y = "Targets")
+             labs(x = "Fantasy Points per Game", y = "Targets per Game")
 
 # GGplot to visualize
-ggplot(fb_clustered, aes(x = FantasyPoints, y = Tgt, color = cluster)) +
+ggplot(fb_clustered, aes(x = FantasyPoints_gm, y = Tgt_gm, color = cluster)) +
   geom_point() +
   scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
-  labs(x = "Fantasy Points", y = "Targets", color = "Cluster") +
+  labs(x = "Fantasy Points per Game", y = "Targets per Game", color = "Cluster") +
   theme_minimal()
 
 ```
@@ -480,7 +480,7 @@ fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
 fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
              palette = "jco", 
              ggtheme = theme_minimal()) +
-  labs(x = "Fantasy Points", y = "Fumbles")
+             labs(x = "Fantasy Points", y = "Fumbles")
 
 # GGplot to visualize
 ggplot(fb_clustered, aes(x = FantasyPoints, y = Fumbles, color = cluster)) +
@@ -515,13 +515,13 @@ fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
 fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
              palette = "jco", 
              ggtheme = theme_minimal()) +
-  labs(x = "Fantasy Points", y = "FumblesLost")
+             labs(x = "Fantasy Points", y = "Fumbles Lost")
 
 # GGplot to visualize
 ggplot(fb_clustered, aes(x = FantasyPoints, y = FumblesLost, color = cluster)) +
   geom_point() +
   scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
-  labs(x = "Fantasy Points", y = "FumblesLost", color = "Cluster") +
+  labs(x = "Fantasy Points", y = "Fumbles Lost", color = "Cluster") +
   theme_minimal()
 
 ```
@@ -547,13 +547,13 @@ fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
 fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
              palette = "jco", 
              ggtheme = theme_minimal()) +
-  labs(x = "Fantasy Points", y = "FumblesLost_gm")
+             labs(x = "Fantasy Points per Game", y = "FumblesLost per Game")
 
 # GGplot to visualize
 ggplot(fb_clustered, aes(x = FantasyPoints_gm, y = FumblesLost_gm, color = cluster)) +
   geom_point() +
   scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
-  labs(x = "Fantasy Points", y = "FumblesLost_gm", color = "Cluster") +
+  labs(x = "Fantasy Points per Game", y = "Fumbles Lost per Game", color = "Cluster") +
   theme_minimal()
 
 ```
@@ -579,20 +579,82 @@ fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
 fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
              palette = "jco", 
              ggtheme = theme_minimal()) +
-  labs(x = "Fantasy Points", y = "Fumbles_gm")
+             labs(x = "Fantasy Points per game", y = "Fumbles per Game")
 
 # GGplot to visualize
 ggplot(fb_clustered, aes(x = FantasyPoints_gm, y = Fumbles_gm, color = cluster)) +
   geom_point() +
   scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
-  labs(x = "Fantasy Points", y = "Fumbles_gm", color = "Cluster") +
+  labs(x = "Fantasy Points per Game", y = "Fumbles per Game", color = "Cluster") +
   theme_minimal()
 
 ```
 
 These two show the Fantasy points per game and fumbles lost and fumbles per game (respectively). This also shows that the amount of fumbles does not necessarily mean a lower fantasy points per game.
 
+```{r cluster-visualization7}
 
+# Cluster visualization with Receiving TDs per game vs FantasyPoints per game
+
+# Extract just the FantasyPoints and GS columns for k-means
+fb_subset <- clust_fb[, c("FantasyPoints_gm", "ReceivingTD_gm")]
+
+summary(fb_subset)
+
+# Perform k-means
+set.seed(20)
+k_fb_subset <- kmeans(fb_subset, centers = 4)  
+k_fb_subset$centers
+
+# Create a data frame with the results
+fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
+
+# fviz_cluster to visualize normalized data
+fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
+             palette = "jco", 
+             ggtheme = theme_minimal()) +
+             labs(x = "Fantasy Points", y = "Receiving Touchdowns per Game")
+
+# GGplot to visualize
+ggplot(fb_clustered, aes(x = FantasyPoints_gm, y = ReceivingTD_gm, color = cluster)) +
+  geom_point() +
+  scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
+  labs(x = "Fantasy Points per Game", y = "Receiving Touchdowns per Game", color = "Cluster") +
+  theme_minimal()
+
+```
+
+```{r cluster-visualization8}
+
+# Cluster visualization with Rushing TDs per game vs FantasyPoints per game
+
+# Extract just the FantasyPoints and GS columns for k-means
+fb_subset <- clust_fb[, c("FantasyPoints_gm", "RushingTD_gm")]
+
+summary(fb_subset)
+
+# Perform k-means
+set.seed(20)
+k_fb_subset <- kmeans(fb_subset, centers = 4)  
+k_fb_subset$centers
+
+# Create a data frame with the results
+fb_clustered <- data.frame(fb_subset, cluster = factor(k_fb_subset$cluster))
+
+# fviz_cluster to visualize normalized data
+fviz_cluster(object = list(data = fb_subset, cluster = k_fb_subset$cluster), 
+             palette = "jco", 
+             ggtheme = theme_minimal()) +
+             labs(x = "Fantasy Points", y = "RushingTD_gm")
+
+# GGplot to visualize
+ggplot(fb_clustered, aes(x = FantasyPoints_gm, y = RushingTD_gm, color = cluster)) +
+  geom_point() +
+  scale_color_manual(values = c("cadetblue", "yellow3", "cornsilk3", "brown1")) +
+  labs(x = "Fantasy Points per Game", y = "Rushing Touchdowns per Game", color = "Cluster") +
+  theme_minimal()
+
+```
 
 
 ```{r boxplots}
@@ -632,6 +694,16 @@ ggplot(clust_fb, aes(x=factor(cluster), y=Fumbles_gm, fill=factor(cluster))) +
 ggplot(clust_fb, aes(x=factor(cluster), y=FumblesLost_gm, fill=factor(cluster))) + 
   geom_boxplot() + 
   labs(x="Cluster", y="Fumbles Lost per Game")
+
+# RUSHING TD PER GAME
+ggplot(clust_fb, aes(x=factor(cluster), y=RushingTD_gm, fill=factor(cluster))) + 
+  geom_boxplot() + 
+  labs(x="Cluster", y="Rushing Touchdowns Per Game")
+
+# RECEIVING TD PER GAME
+ggplot(clust_fb, aes(x=factor(cluster), y=ReceivingTD_gm, fill=factor(cluster))) + 
+  geom_boxplot() + 
+  labs(x="Cluster", y="Receiving Touchdowns Per Game")
 ```
 
 
