@@ -302,7 +302,7 @@ ggplot(te_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) +
 
 ## Clustering Analysis
 
-```{r}
+```{r elbow-method}
 set.seed(20)
 
 # Remove name and team and omit any NA values
