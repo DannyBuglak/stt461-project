@@ -18,7 +18,6 @@ library(corrplot)
 
 ```{r}
 getwd()
-#y2021 <- read.csv("2021.csv")
 ```
 
 ```{r}
@@ -106,28 +105,40 @@ te
 ```{r}
 
 ggplot(data = fb1, aes(x = FantasyPoints_gm)) + 
-  geom_histogram() +
-  ggtitle("Distribution of Fantasy Points per Game")
+  geom_histogram(color = "black", fill = "white") +
+  ggtitle("Distribution of Fantasy Points per Game")+
+  xlab("Fantasy Pointer per Game for all players")
 
 ggplot(data = rb, aes(x = RushingYds_gm)) + 
-  geom_histogram() +
-  ggtitle("Distribution of Runningbacks Rushing Yards per Game")
+  geom_histogram(color = "black", fill = "white") +
+  ggtitle("Distribution of Running Backs Rushing Yards per Game")+
+  xlab("Rushing Yards per Game")
 
 ggplot(data = qb, aes(x = PassingTD_gm)) + 
-  geom_histogram() +
-  ggtitle("Distribution of Quarterbacks Passing Touchdowns per Game")
+  geom_histogram(color = "black", fill = "white") +
+  ggtitle("Distribution of Quarterbacks Passing Touchdowns per Game")+
+  xlab("Passing Touchdowns per Game")
 
 ggplot(data = rb, aes(x = FantasyPoints_gm, y = RushingYds_gm)) + 
   geom_point() +
-  ggtitle("Correlation for Running Backs Fantasy Points per Game and Rushing Yards per Game")
+  ggtitle("Correlation for Running Backs Fantasy Points per Game and 
+          \n Rushing Yards per Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Rushing Yards per Game")
 
 ggplot(data = fb1, aes(x = FantasyPoints_gm, y = FumblesLost_gm)) + 
   geom_point() +
-  ggtitle("Correlation Between Fantasy Points per Game and Fumbles Lost per Game")
+  ggtitle("Correlation Between Fantasy Points per Game and \n Fumbles Lost per 
+          Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Fumbles Lost per Game")
 
 ggplot(data = wr, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) + 
   geom_point() +
-  ggtitle("Correlation for Wide Recievers Fantasy Points per Game and Recieving Touchdowns per Game")
+  ggtitle("Correlation for Wide Recievers Fantasy Points per Game and \n 
+          Recieving Touchdowns per Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Recieving Touchdowns per Game")
 ```
 ```{r}
 rb1 <- rb %>%
@@ -136,17 +147,34 @@ rb1
 ```
 
 ```{r}
-qb_gm <- qb %>%
-  select(Player, Tm, Pos, Age, G, GS, , year, Tgt_gm, Rec_gm, PassingYds_gm, PassingTD_gm, PassingAtt_gm, RushingYds_gm, RushingTD_gm, RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, FantasyPoints_gm, Int_gm, Fumbles_gm, FumblesLost_gm)
+library(tidyverse)
+qb_gm <- qb %>% dplyr::select(Player, Tm, Pos, Age, G, GS, year, Tgt_gm, 
+                              Rec_gm, PassingYds_gm, PassingTD_gm, 
+                              PassingAtt_gm, RushingYds_gm, RushingTD_gm, 
+                              RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, 
+                              FantasyPoints_gm, Int_gm, Fumbles_gm, 
+                              FumblesLost_gm)
 
-rb_gm <- rb %>%
-  select(Player, Tm, Pos, Age, G, GS, , year, Tgt_gm, Rec_gm, PassingYds_gm, PassingTD_gm, PassingAtt_gm, RushingYds_gm, RushingTD_gm, RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, FantasyPoints_gm, Int_gm, Fumbles_gm, FumblesLost_gm)
+rb_gm <- rb %>% dplyr::select(Player, Tm, Pos, Age, G, GS, year, Tgt_gm, 
+                              Rec_gm, PassingYds_gm, PassingTD_gm, 
+                              PassingAtt_gm, RushingYds_gm, RushingTD_gm, 
+                              RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, 
+                              FantasyPoints_gm, Int_gm, Fumbles_gm, 
+                              FumblesLost_gm)
 
-wr_gm <- wr %>%
-  select(Player, Tm, Pos, Age, G, GS, , year, Tgt_gm, Rec_gm, PassingYds_gm, PassingTD_gm, PassingAtt_gm, RushingYds_gm, RushingTD_gm, RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, FantasyPoints_gm, Int_gm, Fumbles_gm, FumblesLost_gm)
+wr_gm <- wr %>% dplyr::select(Player, Tm, Pos, Age, G, GS, year, Tgt_gm, 
+                              Rec_gm, PassingYds_gm, PassingTD_gm, 
+                              PassingAtt_gm, RushingYds_gm, RushingTD_gm, 
+                              RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, 
+                              FantasyPoints_gm, Int_gm, Fumbles_gm, 
+                              FumblesLost_gm)
 
-te_gm <- te %>%
-  select(Player, Tm, Pos, Age, G, GS, , year, Tgt_gm, Rec_gm, PassingYds_gm, PassingTD_gm, PassingAtt_gm, RushingYds_gm, RushingTD_gm, RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, FantasyPoints_gm, Int_gm, Fumbles_gm, FumblesLost_gm)
+te_gm <- te %>% dplyr::select(Player, Tm, Pos, Age, G, GS, year, Tgt_gm, 
+                              Rec_gm, PassingYds_gm, PassingTD_gm, 
+                              PassingAtt_gm, RushingYds_gm, RushingTD_gm, 
+                              RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, 
+                              FantasyPoints_gm, Int_gm, Fumbles_gm, 
+                              FumblesLost_gm)
 ```
 
 
@@ -166,20 +194,28 @@ corrplot(cor(tecorr), method ="circle")
 ```
 ```{r}
 # Most highly correlated stats with qb success
-cor(qb_gm$FantasyPoints_gm, qb_gm$PassingTD_gm)
-cor(qb_gm$FantasyPoints_gm, qb_gm$PassingYds_gm)
-cor(qb_gm$FantasyPoints_gm, qb_gm$GS)
-cor(qb_gm$FantasyPoints_gm, qb_gm$PassingAtt_gm)
+cor(qb_gm$FantasyPoints_gm, qb$PassingTD_gm)
+cor(qb_gm$FantasyPoints_gm, qb$PassingYds_gm)
+cor(qb_gm$FantasyPoints_gm, qb$GS)
+cor(qb_gm$FantasyPoints_gm, qb$PassingAtt_gm)
 ```
 
 ```{r}
 ggplot(qb_gm, aes(x = FantasyPoints_gm, y = PassingTD_gm)) + 
   geom_point()+ 
-  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  ggtitle("Correlation Between Passing Touchdowns per Game and Fantasy Points 
+          per Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Passing Touchdowns per Game")
 
 ggplot(qb_gm, aes(x = FantasyPoints_gm, y = PassingYds_gm)) + 
   geom_point()+ 
-  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  ggtitle("Correlation Between Passing Yards per Game and Fantasy Points per 
+          Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Passing Yards per Game")
 
 ggplot(qb_gm, aes(x = FantasyPoints_gm, y = GS)) + 
   geom_point()+ 
@@ -214,7 +250,11 @@ ggplot(rb_gm, aes(x = FantasyPoints_gm, y = Rec_gm)) +
 
 ggplot(rb_gm, aes(x = FantasyPoints_gm, y = RushingYds_gm)) + 
   geom_point()+ 
-  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  ggtitle("Correlation Between Rushing Yards per Game and Fantasy Points 
+          per Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Rushing Yards per Game")
 
 ggplot(rb_gm, aes(x = FantasyPoints_gm, y = RushingTD_gm)) + 
   geom_point()+ 
@@ -230,7 +270,11 @@ ggplot(rb_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) +
 
 ggplot(rb_gm, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) + 
   geom_point()+ 
-  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  ggtitle("Correlation Between Recieving Touchdowns per Game and Fantasy Points
+          per Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Recieving Touchdowns per Game")
 
 ggplot(rb_gm, aes(x = FantasyPoints_gm, y = GS)) + 
   geom_point()+ 
@@ -249,7 +293,10 @@ cor(wr_gm$FantasyPoints_gm, wr_gm$ReceivingYds_gm)
 ```{r}
 ggplot(wr_gm, aes(x = FantasyPoints_gm, y = GS)) + 
   geom_point()+ 
-  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  ggtitle("Correlation Between Games Started and Fantasy Points per Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Games Started")
 
 ggplot(wr_gm, aes(x = FantasyPoints_gm, y = Tgt_gm)) + 
   geom_point()+ 
@@ -265,7 +312,11 @@ ggplot(wr_gm, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) +
 
 ggplot(wr_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) + 
   geom_point()+ 
-  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  ggtitle("Correlation Between Recieving Yards per Game and Fantasy Points per 
+          Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Recieving Yards per Game")
 ```
 
 ```{r}
@@ -287,11 +338,19 @@ ggplot(te_gm, aes(x = FantasyPoints_gm, y = Rec_gm)) +
 
 ggplot(te_gm, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) + 
   geom_point()+ 
-  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  ggtitle("Correlation Between Recieving Touchdowns per Game and Fantasy Points
+          per \n Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Recieving Touchdowns per Game")
 
 ggplot(te_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) + 
   geom_point()+ 
-  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  ggtitle("Correlation Between Recieving Yards per Game and Fantasy Points per 
+          Game")+
+  xlab("Fantasy Points per Game")+
+  ylab("Recieving Yards per Game")
 ```
 
 
