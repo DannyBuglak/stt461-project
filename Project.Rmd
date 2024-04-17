@@ -264,80 +264,104 @@ ggplot(te_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) +
 
 ```{r}
 #QB Linear Models
-PassingTD_gm_model <- lm(FantasyPoints_gm ~ PassingTD_gm, data = qb_gm)
-PassingYds_gm_model <- lm(FantasyPoints_gm ~ PassingYds_gm, data = qb_gm)
-GS_model <- lm(FantasyPoints_gm ~ GS, data = qb_gm)
-PassingAtt_gm_model <- lm(FantasyPoints_gm ~ PassingAtt_gm, data = qb_gm)
+qb_PassingTD_gm_model <- lm(FantasyPoints_gm ~ PassingTD_gm, data = qb_gm)
+qb_PassingYds_gm_model <- lm(FantasyPoints_gm ~ PassingYds_gm, data = qb_gm)
+qb_GS_model <- lm(FantasyPoints_gm ~ GS, data = qb_gm)
+qb_PassingAtt_gm_model <- lm(FantasyPoints_gm ~ PassingAtt_gm, data = qb_gm)
 
 # Adjusted R squared values
-PassingTD_summary <- summary(PassingTD_gm_model)
+PassingTD_summary <- summary(qb_PassingTD_gm_model)
 adjusted_r_squared <- PassingTD_summary$adj.r.squared
 adjusted_r_squared
 
-PassingYds_summary <- summary(PassingYds_gm_model)
+PassingYds_summary <- summary(qb_PassingYds_gm_model)
 adjusted_r_squared <- PassingYds_summary$adj.r.squared
 adjusted_r_squared
 
-PassingAtt_summary <- summary(PassingAtt_gm_model)
+PassingAtt_summary <- summary(qb_PassingAtt_gm_model)
 adjusted_r_squared <- PassingAtt_summary$adj.r.squared
 adjusted_r_squared
 
-GS_summary <- summary(GS_model)
+GS_summary <- summary(qb_GS_model)
 adjusted_r_squared <- GS_summary$adj.r.squared
 adjusted_r_squared
 
 
 # Combined QB model
 all_qb_model <- lm(FantasyPoints_gm ~ PassingTD_gm + PassingYds_gm + PassingAtt_gm + GS, data = qb_gm)
-summary(all_model)
+summary(all_qb_model)
 
 
 ```
+QB prediction equation
+FantasyPoints_gm = 0.361 + 4.335(PassingTD_gm) + 0.034(PassingYds_gm) - 0.031(PassingAtt_gm) + 0.153(GS)
+
+
+```{r}
+# QB Residual Standard Error
+qbTD_residuals <- resid(qb_PassingTD_gm_model)
+qb_RSE1 <- sqrt(sum(qbTD_residuals^2) / (length(qbTD_residuals) - length(qb_PassingTD_gm_model$coefficients) - 1))
+
+qbYds_residuals <- resid(qb_PassingYds_gm_model)
+qb_RSE2 <- sqrt(sum(qbYDS_residuals^2) / (length(qbYDS_residuals) - length(qb_PassingYds_gm_model$coefficients) - 1))
+
+qbGS_residuals <- resid(qb_GS_model)
+qb_RSE3 <- sqrt(sum(qbGS_residuals^2) / (length(qbGS_residuals) - length(qb_GS_model$coefficients) - 1))
+
+qbAtt_residuals <- resid(qb_PassingAtt_gm_model)
+qb_RSE4 <- sqrt(sum(qbAtt_residuals^2) / (length(qbAtt_residuals) - length(qb_PassingAtt_gm_model$coefficients) - 1))
+
+qb_variable_names <- c("PassingTD_gm", "PassingYds_gm", "PassingAtt_gm", "GS")
+qb_RSE_values <- c(qb_RSE1, qb_RSE2, qb_RSE3, qb_RSE4)
+qb_RSE_table <- data.frame(Variable = qb_variable_names, RSE = qb_RSE_values)
+print(qb_RSE_table)
+```
+
 
 
 
 ```{r}
 #RB Linear Models
-Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = rb_gm)
-Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = rb_gm)
-RushingYds_gm_model <- lm(FantasyPoints_gm ~ RushingYds_gm, data = rb_gm)
-RushingTD_gm_model <- lm(FantasyPoints_gm ~ RushingTD_gm, data = rb_gm)
-RushingAtt_gm_model <- lm(FantasyPoints_gm ~ RushingAtt_gm, data = rb_gm)
-ReceivingYds_gm_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm, data = rb_gm)
-ReceivingTD_gm_model <- lm(FantasyPoints_gm ~ ReceivingTD_gm, data = rb_gm)
-GS_model <- lm(FantasyPoints_gm ~ GS, data = rb_gm)
+rb_Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = rb_gm)
+rb_Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = rb_gm)
+rb_RushingYds_gm_model <- lm(FantasyPoints_gm ~ RushingYds_gm, data = rb_gm)
+rb_RushingTD_gm_model <- lm(FantasyPoints_gm ~ RushingTD_gm, data = rb_gm)
+rb_RushingAtt_gm_model <- lm(FantasyPoints_gm ~ RushingAtt_gm, data = rb_gm)
+rb_ReceivingYds_gm_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm, data = rb_gm)
+rb_ReceivingTD_gm_model <- lm(FantasyPoints_gm ~ ReceivingTD_gm, data = rb_gm)
+rb_GS_model <- lm(FantasyPoints_gm ~ GS, data = rb_gm)
 
 
 # Adjusted R squared values
-RushingYds_gm_summary <- summary(RushingYds_gm_model)
+RushingYds_gm_summary <- summary(rb_RushingYds_gm_model)
 adjusted_r_squared <- RushingYds_gm_summary$adj.r.squared
 adjusted_r_squared
 
-RushingAtt_gm_summary <- summary(RushingAtt_gm_model)
+RushingAtt_gm_summary <- summary(rb_RushingAtt_gm_model)
 adjusted_r_squared <- RushingAtt_gm_summary$adj.r.squared
 adjusted_r_squared
 
-Rec_gm_summary <- summary(Rec_gm_model)
+Rec_gm_summary <- summary(rb_Rec_gm_model)
 adjusted_r_squared <- Rec_gm_summary$adj.r.squared
 adjusted_r_squared
 
-Tgt_gm_summary <- summary(Tgt_gm_model)
+Tgt_gm_summary <- summary(rb_Tgt_gm_model)
 adjusted_r_squared <- Tgt_gm_summary$adj.r.squared
 adjusted_r_squared
 
-ReceivingYds_gm_summary <- summary(ReceivingYds_gm_model)
+ReceivingYds_gm_summary <- summary(rb_ReceivingYds_gm_model)
 adjusted_r_squared <- ReceivingYds_gm_summary$adj.r.squared
 adjusted_r_squared
 
-RushingTD_gm_summary <- summary(RushingTD_gm_model)
+RushingTD_gm_summary <- summary(rb_RushingTD_gm_model)
 adjusted_r_squared <- RushingTD_gm_summary$adj.r.squared
 adjusted_r_squared
 
-GS_summary <- summary(GS_model)
+GS_summary <- summary(rb_GS_model)
 adjusted_r_squared <- GS_summary$adj.r.squared
 adjusted_r_squared
 
-ReceivingTD_gm_summary <- summary(ReceivingTD_gm_model)
+ReceivingTD_gm_summary <- summary(rb_ReceivingTD_gm_model)
 adjusted_r_squared <- ReceivingTD_gm_summary$adj.r.squared
 adjusted_r_squared
 
@@ -346,34 +370,66 @@ all_rb_model <- lm(FantasyPoints_gm ~ Tgt_gm + Rec_gm + RushingYds_gm + RushingT
 summary(all_rb_model)
 
 ```
+RB prediction equation
+FantasyPoints_gm = -0.059 + 0.286(Tgt_gm) + 0.347(Rec_gm) - 0.101(RushingYds_gm) + 5.972(RushingTD_gm) - 0.018(RushingAtt_gm) + 0.115(ReceivingYds_gm) + 6.253(ReceivingTD_gm) - 0.005(GS)
+
+```{r}
+# RB Residual Standard Error
+rbRushYds_residuals <- resid(rb_RushingYds_gm_model)
+rb_RSE1 <- sqrt(sum(rbRushYds_residuals^2) / (length(rbRushYds_residuals) - length(rb_RushingYds_gm_model$coefficients) - 1))
+
+rbRushAtt_residuals <- resid(rb_RushingAtt_gm_model)
+rb_RSE2 <- sqrt(sum(rbRushAtt_residuals^2) / (length(rbRushAtt_residuals) - length(rb_RushingAtt_gm_model$coefficients) - 1))
+
+rbRec_residuals <- resid(rb_Rec_gm_model)
+rb_RSE3 <- sqrt(sum(rbRec_residuals^2) / (length(rbRec_residuals) - length(rb_Rec_gm_model$coefficients) - 1))
+
+rbTgt_residuals <- resid(rb_Tgt_gm_model)
+rb_RSE4 <- sqrt(sum(rbTgt_residuals^2) / (length(rbTgt_residuals) - length(rb_Tgt_gm_model$coefficients) - 1))
+
+rbRecYds_residuals <- resid(rb_ReceivingYds_gm_model)
+rb_RSE5 <- sqrt(sum(rbRecYds_residuals^2) / (length(rbRecYds_residuals) - length(rb_ReceivingYds_gm_model$coefficients) - 1))
+
+rbRushTD_residuals <- resid(rb_RushingTD_gm_model)
+rb_RSE6 <- sqrt(sum(rbRushTD_residuals^2) / (length(rbRushTD_residuals) - length(rb_RushingTD_gm_model$coefficients) - 1))
+
+rbGS_residuals <- resid(rb_GS_model)
+rb_RSE7 <- sqrt(sum(rbGS_residuals^2) / (length(rbGS_residuals) - length(rb_GS_model$coefficients) - 1))
+
+rb_variable_names <- c("RushingYds_gm", "RushingAtt_gm", "Rec_gm", "Tgt_gm", "ReceivingYds_gm", "RushingTD_gm", "GS")
+rb_RSE_values <- c(rb_RSE1, rb_RSE2, rb_RSE3, rb_RSE4, rb_RSE5, rb_RSE6, rb_RSE7)
+rb_RSE_table <- data.frame(Variable = rb_variable_names, RSE = rb_RSE_values)
+print(rb_RSE_table)
+```
+
 
 
 ```{r}
 #WR Linear Models
-GS_model <- lm(FantasyPoints_gm ~ GS, data = wr_gm)
-Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = wr_gm)
-Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = wr_gm)
-ReceivingTD_gm_model <- lm(FantasyPoints_gm ~ ReceivingTD_gm, data = wr_gm)
-ReceivingYds_gm_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm, data = wr_gm)
+wr_GS_model <- lm(FantasyPoints_gm ~ GS, data = wr_gm)
+wr_Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = wr_gm)
+wr_Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = wr_gm)
+wr_ReceivingTD_gm_model <- lm(FantasyPoints_gm ~ ReceivingTD_gm, data = wr_gm)
+wr_ReceivingYds_gm_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm, data = wr_gm)
 
 # Adjusted R squared values
-ReceivingYds_gm_summary <- summary(ReceivingYds_gm_model)
+ReceivingYds_gm_summary <- summary(wr_ReceivingYds_gm_model)
 adjusted_r_squared <- ReceivingYds_gm_summary$adj.r.squared
 adjusted_r_squared
 
-Rec_gm_summary <- summary(Rec_gm_model)
+Rec_gm_summary <- summary(wr_Rec_gm_model)
 adjusted_r_squared <- Rec_gm_summary$adj.r.squared
 adjusted_r_squared
 
-Tgt_gm_summary <- summary(Tgt_gm_model)
+Tgt_gm_summary <- summary(wr_Tgt_gm_model)
 adjusted_r_squared <- Tgt_gm_summary$adj.r.squared
 adjusted_r_squared
 
-ReceivingTD_gm_summary <- summary(ReceivingTD_gm_model)
+ReceivingTD_gm_summary <- summary(wr_ReceivingTD_gm_model)
 adjusted_r_squared <- ReceivingTD_gm_summary$adj.r.squared
 adjusted_r_squared
 
-GS_summary <- summary(GS_model)
+GS_summary <- summary(wr_GS_model)
 adjusted_r_squared <- GS_summary$adj.r.squared
 adjusted_r_squared
 
@@ -383,33 +439,86 @@ summary(all_wr_model)
 
 ```
 
+WR prediction equation
+FantasyPoints_gm = -0.006 + 0.111(ReceivingYds_gm) + 0.562(Rec_gm) + 0.119(Tgt_gm) +  5.687(ReceivingTD_gm) - 0.014(GS)
+
+
+```{r}
+# WR Residual Standard Error
+wrRecYds_residuals <- resid(wr_ReceivingYds_gm_model)
+wr_RSE1 <- sqrt(sum(wrRecYds_residuals^2) / (length(wrRecYds_residuals) - length(wr_ReceivingYds_gm_model$coefficients) - 1))
+
+wrRec_residuals <- resid(wr_Rec_gm_model)
+wr_RSE2 <- sqrt(sum(wrRec_residuals^2) / (length(wrRec_residuals) - length(wr_Rec_gm_model$coefficients) - 1))
+
+wrTgt_residuals <- resid(wr_Tgt_gm_model)
+wr_RSE3 <- sqrt(sum(wrTgt_residuals^2) / (length(wrTgt_residuals) - length(wr_Tgt_gm_model$coefficients) - 1))
+
+wrRecTD_residuals <- resid(wr_ReceivingTD_gm_model)
+wr_RSE4 <- sqrt(sum(wrRecTD_residuals^2) / (length(wrRecTD_residuals) - length(wr_ReceivingTD_gm_model$coefficients) - 1))
+
+wrGS_residuals <- resid(wr_GS_model)
+wr_RSE5 <- sqrt(sum(wrGS_residuals^2) / (length(wrGS_residuals) - length(wr_GS_model$coefficients) - 1))
+
+wr_variable_names <- c("ReceivingYds_gm", "Rec_gm", "Tgt_gm", "ReceivingTD", "GS")
+wr_RSE_values <- c(wr_RSE1, wr_RSE2, wr_RSE3, wr_RSE4, wr_RSE5)
+wr_RSE_table <- data.frame(Variable = wr_variable_names, RSE = wr_RSE_values)
+print(wr_RSE_table)
+```
+
+
+
 ```{r}
 #TE Linear Models
-Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = te_gm)
-Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = te_gm)
-ReceivingTD_gm_model <- lm(FantasyPoints_gm ~ ReceivingTD_gm, data = te_gm)
-ReceivingYds_gm_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm, data = te_gm)
+te_Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = te_gm)
+te_Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = te_gm)
+te_ReceivingTD_gm_model <- lm(FantasyPoints_gm ~ ReceivingTD_gm, data = te_gm)
+te_ReceivingYds_gm_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm, data = te_gm)
 
 # Adjusted R squared values
-ReceivingYds_gm_summary <- summary(ReceivingYds_gm_model)
+ReceivingYds_gm_summary <- summary(te_ReceivingYds_gm_model)
 adjusted_r_squared <- ReceivingYds_gm_summary$adj.r.squared
 adjusted_r_squared
 
-Rec_gm_summary <- summary(Rec_gm_model)
+Rec_gm_summary <- summary(te_Rec_gm_model)
 adjusted_r_squared <- Rec_gm_summary$adj.r.squared
 adjusted_r_squared
 
-Tgt_gm_summary <- summary(Tgt_gm_model)
+Tgt_gm_summary <- summary(te_Tgt_gm_model)
 adjusted_r_squared <- Tgt_gm_summary$adj.r.squared
 adjusted_r_squared
 
-ReceivingTD_gm_summary <- summary(ReceivingTD_gm_model)
+ReceivingTD_gm_summary <- summary(te_ReceivingTD_gm_model)
 adjusted_r_squared <- ReceivingTD_gm_summary$adj.r.squared
 adjusted_r_squared
 
 # Combined TE model
 all_te_model <- lm(FantasyPoints_gm ~ ReceivingYds_gm + Rec_gm + Tgt_gm + ReceivingTD_gm, data = te_gm)
 summary(all_te_model)
+
+```
+
+TE prediction equation
+FantasyPoints_gm = 0.004 + 0.103(ReceivingYds_gm) + 0.552(Rec_gm) + 0.135(Tgt_gm) +  6.03(ReceivingTD_gm)
+
+```{r}
+# TE Residual Standard Error
+teRecYds_residuals <- resid(te_ReceivingYds_gm_model)
+te_RSE1 <- sqrt(sum(teRecYds_residuals^2) / (length(teRecYds_residuals) - length(te_ReceivingYds_gm_model$coefficients) - 1))
+
+teRec_residuals <- resid(te_Rec_gm_model)
+te_RSE2 <- sqrt(sum(teRec_residuals^2) / (length(teRec_residuals) - length(te_Rec_gm_model$coefficients) - 1))
+
+teTgt_residuals <- resid(te_Tgt_gm_model)
+te_RSE3 <- sqrt(sum(teTgt_residuals^2) / (length(teTgt_residuals) - length(te_Tgt_gm_model$coefficients) - 1))
+
+teRecTD_residuals <- resid(te_ReceivingTD_gm_model)
+te_RSE4 <- sqrt(sum(teRecTD_residuals^2) / (length(teRecTD_residuals) - length(te_ReceivingTD_gm_model$coefficients) - 1))
+
+te_variable_names <- c("ReceivingYds_gm", "Rec_gm", "Tgt_gm", "ReceivingTD")
+te_RSE_values <- c(te_RSE1, te_RSE2, te_RSE3, te_RSE4)
+te_RSE_table <- data.frame(Variable = te_variable_names, RSE = te_RSE_values)
+print(te_RSE_table)
 ```
 
 
