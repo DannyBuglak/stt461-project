@@ -16,11 +16,11 @@ library(factoextra)
 library(corrplot)
 ```
 
-```{r}
+```{r working-dir}
 getwd()
 ```
 
-```{r}
+```{r read-csv}
 y2021 <- read.csv("2021.csv")
 y2019 <- read.csv("2019.csv")
 y2018 <- read.csv("2018.csv")
@@ -34,14 +34,14 @@ y2017
 y2016
 ```
 
-```{r}
+```{r double-conversion}
 y2021$G <- as.double(y2021$G)
 y2021$GS <- as.double(y2021$GS)
 y2021$Age <- as.double(y2021$Age)
 #y2021
 ```
 
-```{r}
+```{r setup1}
 y2021$year<- rep('2021', times= nrow(y2021))
 y2021.1 <- y2021[,-1]
 #y2021.1
@@ -62,7 +62,7 @@ y2016.1 <- y2016[,-1]
 fb <- rbind(y2021.1, y2019.1, y2018.1, y2017.1, y2016.1)
 #fb
 ```
-```{r}
+```{r setup2}
 fb$Tgt_gm <- fb$Tgt/fb$G
 fb$Rec_gm <- fb$Rec/fb$G
 fb$PassingYds_gm <- fb$PassingYds/fb$G
@@ -80,14 +80,14 @@ fb$FumblesLost_gm <- fb$FumblesLost/fb$G
 summary(fb)
 ```
 
-```{r}
+```{r setup3}
 fb1 <- fb %>%
   filter(GS >= 5, FantasyPoints_gm > 0)
 fb1
 ```
 
 
-```{r}
+```{r setup4}
 rb <- fb1 %>%
   filter(Pos == "RB")
 qb <- fb1 %>%
@@ -102,7 +102,7 @@ wr
 te
 ```
 
-```{r}
+```{r intro1}
 
 ggplot(data = fb1, aes(x = FantasyPoints_gm)) + 
   geom_histogram(color = "black", fill = "white") +
@@ -140,13 +140,13 @@ ggplot(data = wr, aes(x = FantasyPoints_gm, y = ReceivingTD_gm)) +
   xlab("Fantasy Points per Game")+
   ylab("Recieving Touchdowns per Game")
 ```
-```{r}
+```{r setup5}
 rb1 <- rb %>%
   filter(RushingYds_gm == 0)
 rb1
 ```
 
-```{r}
+```{r setup7}
 library(tidyverse)
 qb_gm <- qb %>% dplyr::select(Player, Tm, Pos, Age, G, GS, year, Tgt_gm, 
                               Rec_gm, PassingYds_gm, PassingTD_gm, 
@@ -178,7 +178,7 @@ te_gm <- te %>% dplyr::select(Player, Tm, Pos, Age, G, GS, year, Tgt_gm,
 ```
 
 
-```{r}
+```{r corr1}
 
 qbcorr <- subset(qb_gm, select = -c(Tm, Pos, Player, year))
 corrplot(cor(qbcorr), method ="circle")
@@ -192,7 +192,7 @@ corrplot(cor(wrcorr), method ="circle")
 tecorr <- subset(te_gm, select = -c(Tm, Pos, Player, year))
 corrplot(cor(tecorr), method ="circle")
 ```
-```{r}
+```{r corr2}
 # Most highly correlated stats with qb success
 cor(qb_gm$FantasyPoints_gm, qb$PassingTD_gm)
 cor(qb_gm$FantasyPoints_gm, qb$PassingYds_gm)
@@ -200,7 +200,7 @@ cor(qb_gm$FantasyPoints_gm, qb$GS)
 cor(qb_gm$FantasyPoints_gm, qb$PassingAtt_gm)
 ```
 
-```{r}
+```{r corr3}
 ggplot(qb_gm, aes(x = FantasyPoints_gm, y = PassingTD_gm)) + 
   geom_point()+ 
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
@@ -227,7 +227,7 @@ ggplot(qb_gm, aes(x = FantasyPoints_gm, y = PassingAtt_gm)) +
 ```
 
 
-```{r}
+```{r corr4}
 # Most highly correlated stats with rb success
 cor(rb_gm$FantasyPoints_gm, rb_gm$Tgt_gm)
 cor(rb_gm$FantasyPoints_gm, rb_gm$Rec_gm)
@@ -239,7 +239,7 @@ cor(rb_gm$FantasyPoints_gm, rb_gm$ReceivingTD_gm)
 cor(rb_gm$FantasyPoints_gm, rb_gm$GS)
 ```
 
-```{r}
+```{r corr5}
 ggplot(rb_gm, aes(x = FantasyPoints_gm, y = Tgt_gm)) + 
   geom_point()+ 
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
@@ -281,7 +281,7 @@ ggplot(rb_gm, aes(x = FantasyPoints_gm, y = GS)) +
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
 ```
 
-```{r}
+```{r corr6}
 # Most highly correlated stats with wr success
 cor(wr_gm$FantasyPoints_gm, wr_gm$GS)
 cor(wr_gm$FantasyPoints_gm, wr_gm$Tgt_gm)
@@ -290,7 +290,7 @@ cor(wr_gm$FantasyPoints_gm, wr_gm$ReceivingTD_gm)
 cor(wr_gm$FantasyPoints_gm, wr_gm$ReceivingYds_gm)
 ```
 
-```{r}
+```{r corr7}
 ggplot(wr_gm, aes(x = FantasyPoints_gm, y = GS)) + 
   geom_point()+ 
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
@@ -319,7 +319,7 @@ ggplot(wr_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) +
   ylab("Recieving Yards per Game")
 ```
 
-```{r}
+```{r corr8}
 # Most highly correlated stats with te success
 cor(te_gm$FantasyPoints_gm, te_gm$Tgt_gm)
 cor(te_gm$FantasyPoints_gm, te_gm$Rec_gm)
@@ -327,7 +327,7 @@ cor(te_gm$FantasyPoints_gm, te_gm$ReceivingTD_gm)
 cor(te_gm$FantasyPoints_gm, te_gm$ReceivingYds_gm)
 ```
 
-```{r}
+```{r corr9}
 ggplot(te_gm, aes(x = FantasyPoints_gm, y = Tgt_gm)) + 
   geom_point()+ 
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
@@ -895,14 +895,14 @@ ggplot(clust_fb, aes(x=factor(cluster), y=ReceivingTD_gm, fill=factor(cluster)))
 ```
 
 
-```{r}
+```{r filter1}
 
 rb1 <- rb %>%
   filter(RushingYds_gm == 0)
 rb1
 ```
 
-```{r}
+```{r filter2}
 qb_gm <- qb %>%
   select(Player, Tm, Pos, Age, G, GS, , year, Tgt_gm, Rec_gm, PassingYds_gm, PassingTD_gm, PassingAtt_gm, RushingYds_gm, RushingTD_gm, RushingAtt_gm, ReceivingYds_gm, ReceivingTD_gm, FantasyPoints_gm, Int_gm, Fumbles_gm, FumblesLost_gm)
 
@@ -917,7 +917,7 @@ te_gm <- te %>%
 ```
 
 
-```{r}
+```{r corr09}
 library(corrplot)
 
 qbcorr <- subset(qb_gm, select = -c(Tm, Pos, Player, year))
@@ -932,7 +932,7 @@ corrplot(cor(wrcorr), method ="circle")
 tecorr <- subset(te_gm, select = -c(Tm, Pos, Player, year))
 corrplot(cor(tecorr), method ="circle")
 ```
-```{r}
+```{r corr10}
 # Most highly correlated stats with qb success
 cor(qb_gm$FantasyPoints_gm, qb_gm$PassingTD_gm)
 cor(qb_gm$FantasyPoints_gm, qb_gm$PassingYds_gm)
@@ -940,7 +940,7 @@ cor(qb_gm$FantasyPoints_gm, qb_gm$GS)
 cor(qb_gm$FantasyPoints_gm, qb_gm$PassingAtt_gm)
 ```
 
-```{r}
+```{r corr11}
 ggplot(qb_gm, aes(x = FantasyPoints_gm, y = PassingTD_gm)) + 
   geom_point()+ 
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
@@ -959,7 +959,7 @@ ggplot(qb_gm, aes(x = FantasyPoints_gm, y = PassingAtt_gm)) +
 ```
 
 
-```{r}
+```{r corr12}
 # Most highly correlated stats with rb success
 cor(rb_gm$FantasyPoints_gm, rb_gm$Tgt_gm)
 cor(rb_gm$FantasyPoints_gm, rb_gm$Rec_gm)
@@ -971,7 +971,7 @@ cor(rb_gm$FantasyPoints_gm, rb_gm$ReceivingTD_gm)
 cor(rb_gm$FantasyPoints_gm, rb_gm$GS)
 ```
 
-```{r}
+```{r corr13}
 ggplot(rb_gm, aes(x = FantasyPoints_gm, y = Tgt_gm)) + 
   geom_point()+ 
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
@@ -1005,7 +1005,7 @@ ggplot(rb_gm, aes(x = FantasyPoints_gm, y = GS)) +
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
 ```
 
-```{r}
+```{r corr14}
 # Most highly correlated stats with wr success
 cor(wr_gm$FantasyPoints_gm, wr_gm$GS)
 cor(wr_gm$FantasyPoints_gm, wr_gm$Tgt_gm)
@@ -1014,7 +1014,7 @@ cor(wr_gm$FantasyPoints_gm, wr_gm$ReceivingTD_gm)
 cor(wr_gm$FantasyPoints_gm, wr_gm$ReceivingYds_gm)
 ```
 
-```{r}
+```{r corr15}
 ggplot(wr_gm, aes(x = FantasyPoints_gm, y = GS)) + 
   geom_point()+ 
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
@@ -1036,7 +1036,7 @@ ggplot(wr_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) +
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
 ```
 
-```{r}
+```{r corr16}
 # Most highly correlated stats with te success
 cor(te_gm$FantasyPoints_gm, te_gm$Tgt_gm)
 cor(te_gm$FantasyPoints_gm, te_gm$Rec_gm)
@@ -1044,7 +1044,7 @@ cor(te_gm$FantasyPoints_gm, te_gm$ReceivingTD_gm)
 cor(te_gm$FantasyPoints_gm, te_gm$ReceivingYds_gm)
 ```
 
-```{r}
+```{r corr17}
 library(ggplot2)
 ggplot(te_gm, aes(x = FantasyPoints_gm, y = Tgt_gm)) + 
   geom_point()+ 
@@ -1063,7 +1063,7 @@ ggplot(te_gm, aes(x = FantasyPoints_gm, y = ReceivingYds_gm)) +
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
 ```
 
-```{r}
+```{r linear1}
 #QB Linear Models
 qb_PassingTD_gm_model <- lm(FantasyPoints_gm ~ PassingTD_gm, data = qb_gm)
 qb_PassingYds_gm_model <- lm(FantasyPoints_gm ~ PassingYds_gm, data = qb_gm)
@@ -1098,7 +1098,7 @@ QB prediction equation
 FantasyPoints_gm = 0.361 + 4.335(PassingTD_gm) + 0.034(PassingYds_gm) - 0.031(PassingAtt_gm) + 0.153(GS)
 
 
-```{r}
+```{r linear2}
 # QB Residual Standard Error
 qbTD_residuals <- resid(qb_PassingTD_gm_model)
 qb_RSE1 <- sqrt(sum(qbTD_residuals^2) / (length(qbTD_residuals) - length(qb_PassingTD_gm_model$coefficients) - 1))
@@ -1121,7 +1121,7 @@ print(qb_RSE_table)
 
 
 
-```{r}
+```{r linear3}
 #RB Linear Models
 rb_Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = rb_gm)
 rb_Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = rb_gm)
@@ -1174,7 +1174,7 @@ summary(all_rb_model)
 RB prediction equation
 FantasyPoints_gm = -0.059 + 0.286(Tgt_gm) + 0.347(Rec_gm) - 0.101(RushingYds_gm) + 5.972(RushingTD_gm) - 0.018(RushingAtt_gm) + 0.115(ReceivingYds_gm) + 6.253(ReceivingTD_gm) - 0.005(GS)
 
-```{r}
+```{r linear4}
 # RB Residual Standard Error
 rbRushYds_residuals <- resid(rb_RushingYds_gm_model)
 rb_RSE1 <- sqrt(sum(rbRushYds_residuals^2) / (length(rbRushYds_residuals) - length(rb_RushingYds_gm_model$coefficients) - 1))
@@ -1205,7 +1205,7 @@ print(rb_RSE_table)
 
 
 
-```{r}
+```{r linear5}
 #WR Linear Models
 wr_GS_model <- lm(FantasyPoints_gm ~ GS, data = wr_gm)
 wr_Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = wr_gm)
@@ -1244,7 +1244,7 @@ WR prediction equation
 FantasyPoints_gm = -0.006 + 0.111(ReceivingYds_gm) + 0.562(Rec_gm) + 0.119(Tgt_gm) +  5.687(ReceivingTD_gm) - 0.014(GS)
 
 
-```{r}
+```{r linear6}
 # WR Residual Standard Error
 wrRecYds_residuals <- resid(wr_ReceivingYds_gm_model)
 wr_RSE1 <- sqrt(sum(wrRecYds_residuals^2) / (length(wrRecYds_residuals) - length(wr_ReceivingYds_gm_model$coefficients) - 1))
@@ -1269,7 +1269,7 @@ print(wr_RSE_table)
 
 
 
-```{r}
+```{r linear7}
 #TE Linear Models
 te_Tgt_gm_model <- lm(FantasyPoints_gm ~ Tgt_gm, data = te_gm)
 te_Rec_gm_model <- lm(FantasyPoints_gm ~ Rec_gm, data = te_gm)
@@ -1302,7 +1302,7 @@ summary(all_te_model)
 TE prediction equation
 FantasyPoints_gm = 0.004 + 0.103(ReceivingYds_gm) + 0.552(Rec_gm) + 0.135(Tgt_gm) +  6.03(ReceivingTD_gm)
 
-```{r}
+```{r linear8}
 # TE Residual Standard Error
 teRecYds_residuals <- resid(te_ReceivingYds_gm_model)
 te_RSE1 <- sqrt(sum(teRecYds_residuals^2) / (length(teRecYds_residuals) - length(te_ReceivingYds_gm_model$coefficients) - 1))
